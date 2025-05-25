@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>To-Do List App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #c2e9fb, #a1c4fd);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h1 {
+      color: #4a4e69;
+      margin-bottom: 20px;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #4a90e2;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #357ab8;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    li {
+      background-color: #f1f1f1;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .task-buttons {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .task-buttons button {
+      width: 48%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>To-Do List</h1>
+    <form id="task-form">
+      <input type="text" id="title" placeholder="Task title" required />
+      <textarea id="description" placeholder="Description" required></textarea>
+      <input type="date" id="due_date" required />
+      <button type="submit">Add Task</button>
+    </form>
+    <ul id="task-list"></ul>
+  </div>
+
+  <script>
+    const taskForm = document.getElementById('task-form');
+    const taskList = document.getElementById('task-list');
+
+    let tasks = [];
+
+    function renderTasks() {
+      taskList.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${task.completed ? '✅' : '❌'} ${task.title}</strong><br>${task.description}<br><small>Due: ${task.due_date}</small>`;
+        
+        const btnDiv = document.createElement('div');
+        btnDiv.className = 'task-buttons';
+
+        const completeBtn = document.createElement('button');
+        completeBtn.textContent = 'Mark Completed';
+        completeBtn.onclick = () => {
+          tasks[index].completed = true;
+          renderTasks();
+        };
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.onclick = () => {
+          tasks.splice(index, 1);
+          renderTasks();
+        };
+
+        btnDiv.appendChild(completeBtn);
+        btnDiv.appendChild(deleteBtn);
+        li.appendChild(btnDiv);
+        taskList.appendChild(li);
+      });
+    }
+
+    taskForm.onsubmit = function(e) {
+      e.preventDefault();
+      const newTask = {
+        title: document.getElementById('title').value,
+        description: document.getElementById('description').value,
+        due_date: document.getElementById('due_date').value,
+        completed: false,
+      };
+      tasks.push(newTask);
+      renderTasks();
+      taskForm.reset();
+    };
+  </script>
+</body>
+</html>
